@@ -126,7 +126,7 @@ public class DailyRateMainForm {
         dailyRateMainForm.init();
 
         // 创建frame
-        JFrame frame = new JFrame("满意度日报工具V1.1");
+        JFrame frame = new JFrame("满意度日报工具V1.2");
         frame.setContentPane(dailyRateMainForm.homePanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -193,7 +193,7 @@ public class DailyRateMainForm {
                         outputButton.setEnabled(true);
                         generateButton.setEnabled(true);
                         generateButton.setText("生成");
-                        JOptionPane.showMessageDialog(homePanel, exception.getMessage());
+                        JOptionPane.showMessageDialog(homePanel, StringUtils.substringBefore(exception.getMessage(), "\n"));
                     }
                 }
             };

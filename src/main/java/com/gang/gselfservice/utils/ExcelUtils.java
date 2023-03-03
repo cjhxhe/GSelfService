@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Excel 工具类
  */
-public class ExcelUtils {
+public class ExcelUtils implements ExcelUtilsInterface {
 
     private Workbook workbook;
     private OutputStream os;
@@ -26,8 +26,8 @@ public class ExcelUtils {
     private static final String EXT_XLS = "xls";
     private static final String EXT_XLSX = "xlsx";
 
-    private static final String DEF_VERSION = "2007";
-    private static final String LEGACY_VERSION = "2003";
+    public static final String DEF_VERSION = "2007";
+    public static final String LEGACY_VERSION = "2003";
 
     public void setPattern(String pattern) {
         this.pattern = pattern;

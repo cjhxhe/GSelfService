@@ -11,7 +11,9 @@ import com.gang.gselfservice.enums.DailyRateSourceEnum;
 import com.gang.gselfservice.exception.BizException;
 import com.gang.gselfservice.task.DBUpsertTask;
 import com.gang.gselfservice.utils.DateUtils;
+import com.gang.gselfservice.utils.ExcelStreamingUtils;
 import com.gang.gselfservice.utils.ExcelUtils;
+import com.gang.gselfservice.utils.ExcelUtilsInterface;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -187,6 +189,15 @@ public class DailyRateService {
         return StringUtils.defaultString(processingDate, DateUtils.getCurrentDate());
     }
 
+    public static void main(String[] args) throws Exception {
+        String filePath = "/Users/yugang/Downloads/满意度数据全库数据2022.01-12.xlsx";
+        File file = new File(filePath);
+        FileInputStream fis = new FileInputStream(file);
+        ExcelStreamingUtils excelUtils = new ExcelStreamingUtils(fis);
+        List<List<String>> lists = excelUtils.read(0);
+        lists.stream().limit(100).forEach(System.out::println);
+    }
+
     /**
      * 解析整个文档
      *
@@ -198,7 +209,7 @@ public class DailyRateService {
 
         // 兼容两种Excel
         String excelVersion = ExcelUtils.getExcelVersion(filePath);
-        ExcelUtils excelUtils = new ExcelUtils(fis, excelVersion);
+        ExcelUtilsInterface excelUtils = ExcelUtils.LEGACY_VERSION.equals(excelVersion) ? new ExcelUtils(fis, excelVersion) : new ExcelStreamingUtils(fis);
 
         // 解析数据
         List<List<String>> lists = excelUtils.read(0);
@@ -292,6 +303,8 @@ public class DailyRateService {
 
         // 回访列表
         needFeedBackList = getNeedFeedBackList(dailyRateBOList);
+
+        excelUtils.close();
 
         // 落库
         ThreadPool.getExecutorService().submit(new DBUpsertTask(dailyRateBOList));
